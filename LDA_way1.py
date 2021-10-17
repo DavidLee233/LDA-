@@ -8,6 +8,7 @@ X1=X[pos0,0:2]
 X1=X1[0,:,:]
 X2=X[pos1,0:2]
 X2=X2[0,:,:]
+
 #画出原始点所在位置
 plt.figure(0)
 ax = plt.subplot(1,2,1)
@@ -16,7 +17,6 @@ ax.scatter(X2[:,0], X2[:,1], c='blue', s=10,label='标签为0的点')
 plt.rcParams['font.sans-serif'] = ['KaiTi'] # 黑体:SimHei  仿宋:FangSong  楷体:KaiTi  微软雅黑体:Microsoft YaHei  宋体:SimSun
 plt.rcParams['axes.unicode_minus']=False  #使得坐标轴可以显示负号
 plt.title('初始点所在位置坐标')        #设置标题
-
 
 #第一步，求各个类别的均值
 mu_old1=np.mean(X1,axis = 0) #axis = 0表示按列求平均 axis = 1表示按行求平均
@@ -44,6 +44,7 @@ Sb=(p*Sb1+q*Sb2)/(p+q)
 bb=np.linalg.det(Sw) #求Sw的特征值，若为0则不可逆
 if bb==0:
     print('不能继续计算下去，因为Sw不可逆')
+    
 #第四步，求最大特征值和特征向量，求解出最佳投影方向，下面为第一种方法
 # [V,L]=np.linalg.eig(np.dot(np.linalg.inv(Sw),np.array(Sb))) #V为特征值 L为特征向量
 # list1=[]
@@ -56,6 +57,7 @@ if bb==0:
 w = np.zeros((2, 1))
 w = np.dot((np.linalg.inv(Sw)),np.array(mu_old1-mu_old2).transpose())
 w_1 = w.T
+
 #计算原始样本投影后的坐标(均变为一维点，因此用点乘)
 u1 = []
 for i in range(p):
@@ -65,15 +67,18 @@ u2 = []
 for i in range(q):
     u2.append(np.dot(w_1, X2[i]))
 u2 = np.array(u2)
+
 #计算最佳分割阈值b
 mu_new1 = sum(u1)/len(u1)
 mu_new2 = sum(u2)/len(u2)
 b = -(mu_new1+mu_new2)/2
+
 #计算第一类样本在直线上的投影点
 X_new1 = []
 for i in range(len(u1)):
     X_new1.append(u1[i] + b)
 X_new1 = np.array(X_new1).T
+
 #计算第二类样本在直线上的投影点
 X_new2 = []
 for i in range(len(u2)):
