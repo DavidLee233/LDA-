@@ -8,6 +8,7 @@ X1=X[pos0,0:2]
 X1=X1[0,:,:]
 X2=X[pos1,0:2]
 X2=X2[0,:,:]
+
 #画出原始点所在位置
 plt.figure(0)
 ax = plt.subplot(1,1,1)
@@ -16,7 +17,6 @@ ax.scatter(X2[:,0], X2[:,1], c='blue', s=10,label='标签为0的点')
 plt.rcParams['font.sans-serif'] = ['KaiTi'] # 黑体:SimHei  仿宋:FangSong  楷体:KaiTi  微软雅黑体:Microsoft YaHei  宋体:SimSun
 plt.rcParams['axes.unicode_minus']=False  #使得坐标轴可以显示负号
 plt.title('初始点所在位置坐标')        #设置标题
-
 
 #第一步，求各个类别的均值
 mu_old1=np.mean(X1,axis = 0) #axis = 0表示按列求平均 axis = 1表示按行求平均
@@ -44,6 +44,7 @@ Sb=(p*Sb1+q*Sb2)/(p+q)
 bb=np.linalg.det(Sw) #求Sw的特征值，若为0则不可逆
 if bb==0:
     print('不能继续计算下去，因为Sw不可逆')
+    
 #第四步，求最大特征值和特征向量，求解出最佳投影方向，下面为第一种方法
 [V,L]=np.linalg.eig(np.dot(np.linalg.inv(Sw),np.array(Sb))) #V为特征值 L为特征向量
 list1=[]
@@ -51,12 +52,14 @@ a=V
 list1 = a.tolist()
 b=list1.index(max(list1))
 W = L[:,b]
+
 #根据求得的投影向量W画出投影线
 k=W[1]/W[0]
 b=0;
 x=np.arange(2,10)
 yy=k*x+b
 plt.plot(x,yy,color='green')
+
 #计算第一类样本在直线上的投影点
 xi=[]
 yi=[]
@@ -67,6 +70,7 @@ for i in range(0,p):
     y1=k*x1+b
     xi.append(x1)
     yi.append(y1)
+    
 #计算第二类样本在直线上的投影点
 xj=[]
 yj=[]
@@ -77,6 +81,7 @@ for i in range(0,q):
     y1=k*x1+b
     xj.append(x1)
     yj.append(y1)
+    
 #画出投影后的点
 plt.plot(xi,yi,'r+',label='投影后的第一类点')
 plt.plot(xj,yj,'b>',label='投影后的第二类点')
