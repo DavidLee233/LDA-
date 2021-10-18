@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import io
+
+#读取初始数据并将之转换为数组形式
 X=io.loadmat('data.mat')['data']
 pos0=np.where(X[:,2]==1)
 pos1=np.where(X[:,2]==0)
